@@ -1,25 +1,18 @@
-const path = require("path");
-const sqlite3 = require("sqlite3").verbose();
+const mysql = require("mysql2");
 
-// Caminho absoluto do banco
-const dbPath = path.resolve(__dirname, "tasks.db");
-
-// Cria o banco e conecta
-const db = new sqlite3.Database(dbPath, (err) => {
-  if (err) {
-    console.error("❌ Erro ao abrir/criar banco:", err.message);
-  } else {
-    console.log("✅ Banco SQLite conectado em:", dbPath);
-  }
+const db = mysql.createConnection({
+  host: "localhost",
+  user: "root",
+  password: "tyr_platina0202",
+  database: "todo_list"
 });
 
-// Cria a tabela se não existir
-db.serialize(() => {
-  db.run(`CREATE TABLE IF NOT EXISTS tasks (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    title TEXT NOT NULL,
-    done INTEGER NOT NULL
-  )`);
+db.connect((err) => {
+  if (err) {
+    console.error("❌ Erro ao conectar no MySQL:", err);
+  } else {
+    console.log("✅ Conectado ao MySQL");
+  }
 });
 
 module.exports = db;
