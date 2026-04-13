@@ -1,6 +1,6 @@
 body {
   font-family: Arial, sans-serif;
-  background: #f4f4f9;
+  background: #f5f6fa;
   display: flex;
   justify-content: center;
   margin-top: 50px;
@@ -8,10 +8,10 @@ body {
 
 .container {
   background: white;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  padding: 25px;
+  border-radius: 10px;
   width: 400px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
 }
 
 h1 {
@@ -21,27 +21,38 @@ h1 {
 
 .input-group {
   display: flex;
-  gap: 8px;
+  gap: 10px;
 }
 
 input {
   flex: 1;
-  padding: 8px;
-  border-radius: 6px;
+  padding: 10px;
+  border-radius: 5px;
   border: 1px solid #ccc;
 }
 
+select {
+  padding: 10px;
+  border-radius: 5px;
+}
+
 button {
-  padding: 8px 12px;
+  padding: 10px;
   border: none;
   background: #4CAF50;
   color: white;
-  border-radius: 6px;
+  border-radius: 5px;
   cursor: pointer;
 }
 
 button:hover {
   background: #45a049;
+}
+
+.filters {
+  margin-top: 15px;
+  display: flex;
+  justify-content: space-between;
 }
 
 ul {
@@ -51,20 +62,20 @@ ul {
 }
 
 li {
+  background: #f1f1f1;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: #f9f9f9;
-  padding: 10px;
-  margin-bottom: 8px;
-  border-radius: 6px;
 }
 
-li span {
-  cursor: pointer;
+li button {
+  margin-left: 5px;
+  background: #007bff;
 }
 
-.done {
-  text-decoration: line-through;
-  color: gray;
+li button:last-child {
+  background: #e74c3c;
 }

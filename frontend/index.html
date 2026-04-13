@@ -1,20 +1,36 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
   <meta charset="UTF-8">
   <title>To-Do List</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="container">
-    <h1>📋 Minha To-Do List</h1>
-    <div class="input-group">
-      <input type="text" id="taskInput" placeholder="Digite uma tarefa...">
-      <button onclick="addTask()">Adicionar</button>
-    </div>
-    <ul id="taskList"></ul>
+
+<div class="container">
+  <h1>📝 To-Do List</h1>
+
+  <div class="input-group">
+    <input type="text" id="taskInput" placeholder="Digite uma tarefa...">
+
+    <select id="priority">
+      <option value="baixa">Baixa</option>
+      <option value="media">Média</option>
+      <option value="alta">Alta</option>
+    </select>
+
+    <button onclick="addTask()">Adicionar</button>
   </div>
-  <script src="script.js"></script>
+
+  <div class="filters">
+    <button onclick="loadTasks()">Todas</button>
+    <button onclick="filterTasks(0)">Pendentes</button>
+    <button onclick="filterTasks(1)">Concluídas</button>
+  </div>
+
+  <ul id="taskList"></ul>
+</div>
+
+<script src="script.js"></script>
 </body>
 </html>
-

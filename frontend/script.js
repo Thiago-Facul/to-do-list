@@ -1,66 +1,76 @@
-const API_URL = "http://localhost:3000/tasks";
+const API = "http://localhost:3000/tasks";
 
 async function loadTasks() {
-  try {
-    const res = await fetch(API_URL);
-    const tasks = await res.json();
-    const list = document.getElementById("taskList");
-    list.innerHTML = "";
-    tasks.forEach(task => {
-      const li = document.createElement("li");
-      li.innerHTML = `
-        <span class="${task.done ? "done" : ""}" onclick="toggleTask(${task.id}, ${task.done})">
-          ${task.title}
-        </span>
-        <button onclick="deleteTask(${task.id})">🗑️</button>
-      `;
-      list.appendChild(li);
-    });
-  } catch (err) {
-    console.error("Erro ao carregar tarefas:", err);
-  }
+  const res = await fetch(API);
+  const tasks = await res.json();
+  render(tasks);
+}
+
+async function filterTasks(done) {
+  const res = await fetch(`${API}?done=${done}`);
+  const tasks = await res.json();
+  render(tasks);
 }
 
 async function addTask() {
-  const input = document.getElementById("taskInput");
-  const title = input.value.trim();
-  if (!title) return;
+  const title = document.getElementById("taskInput").value;
+  const priority = document.getElementById("priority").value;
 
-  try {
-    await fetch(API_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ title })
-    });
-    input.value = "";
-    loadTasks();
-  } catch (err) {
-    console.error("Erro ao adicionar tarefa:", err);
-  }
+  await fetch(API, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ title, priority })
+  });
+
+  document.getElementById("taskInput").value = "";
+  loadTasks();
 }
 
 async function toggleTask(id, done) {
-  try {
-    await fetch(`${API_URL}/${id}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ done: done ? 0 : 1 })
-    });
-    loadTasks();
-  } catch (err) {
-    console.error("Erro ao atualizar tarefa:", err);
-  }
+  await fetch(`${API}/${id}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ done: !done })
+  });
+
+  loadTasks();
 }
 
 async function deleteTask(id) {
-  try {
-    await fetch(`${API_URL}/${id}`, { method: "DELETE" });
-    loadTasks();
-  } catch (err) {
-    console.error("Erro ao excluir tarefa:", err);
-  }
+  await fetch(`${API}/${id}`, {
+    method: "DELETE"
+  });
+
+  loadTasks();
 }
 
-// Carrega tarefas assim que abre a página
-loadTasks();
+function render(tasks) {
+  const list = document.getElementById("taskList");
+  list.innerHTML = "";
 
+  tasks.forEach(task => {
+    const li = document.createElement("li");
+
+    li.innerHTML = `
+      <span>
+        ${task.done ? "✅" : "⬜"} 
+        ${task.title} 
+        <small>(${task.priority})</small>
+      </span>
+
+      <div>
+        <button onclick="toggleTask(${task.id}, ${task.done})">
+          ✔
+        </button>
+
+        <button onclick="deleteTask(${task.id})">
+          🗑
+        </button>
+      </div>
+    `;
+
+    list.appendChild(li);
+  });
+}
+
+loadTasks();
