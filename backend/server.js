@@ -9,34 +9,49 @@ app.use(bodyParser.json());
 
 // Criar tarefa
 app.post("/tasks", (req, res) => {
-  const { title } = req.body;
+  const { title, priority } = req.body;
+
   db.query(
-    "INSERT INTO tasks (title, done) VALUES (?, ?)",
-    [title, false],
+    "INSERT INTO tasks (title, done, priority) VALUES (?, ?, ?)",
+    [title, false, priority || "media"],
     (err, result) => {
-      if (err) return res.status(500).json({ error: err.message });
-      res.json({ id: result.insertId, title, done: false });
+      if (err) return res.status(500).json(err);
+      res.json({
+        id: result.insertId,
+        title,
+        done: false,
+        priority
+      });
     }
   );
 });
 
-// Listar tarefas
+// Listar tarefas (com filtro)
 app.get("/tasks", (req, res) => {
-  db.query("SELECT * FROM tasks", (err, results) => {
-    if (err) return res.status(500).json({ error: err.message });
+  const { done } = req.query;
+
+  let query = "SELECT * FROM tasks";
+
+  if (done !== undefined) {
+    query += " WHERE done = ?";
+  }
+
+  db.query(query, done !== undefined ? [done] : [], (err, results) => {
+    if (err) return res.status(500).json(err);
     res.json(results);
   });
 });
 
-// Atualizar tarefa
+// Atualizar status
 app.put("/tasks/:id", (req, res) => {
   const { id } = req.params;
   const { done } = req.body;
+
   db.query(
     "UPDATE tasks SET done = ? WHERE id = ?",
     [done, id],
     (err) => {
-      if (err) return res.status(500).json({ error: err.message });
+      if (err) return res.status(500).json(err);
       res.json({ id, done });
     }
   );
@@ -45,12 +60,13 @@ app.put("/tasks/:id", (req, res) => {
 // Deletar tarefa
 app.delete("/tasks/:id", (req, res) => {
   const { id } = req.params;
+
   db.query("DELETE FROM tasks WHERE id = ?", [id], (err) => {
-    if (err) return res.status(500).json({ error: err.message });
+    if (err) return res.status(500).json(err);
     res.json({ id });
   });
 });
 
 app.listen(3000, () => {
-  console.log("✅ Backend rodando em http://localhost:3000");
+  console.log("🚀 Backend rodando em http://localhost:3000");
 });
