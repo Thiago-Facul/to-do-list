@@ -10,24 +10,63 @@
 <div class="container">
   <h1>📝 To-Do List</h1>
 
+  <!-- Área de adicionar tarefa -->
   <div class="input-group">
-    <input type="text" id="taskInput" placeholder="Digite uma tarefa...">
+    <input 
+      type="text" 
+      id="taskInput" 
+      placeholder="Digite uma tarefa..."
+    >
 
+    <!-- Prioridade -->
     <select id="priority">
       <option value="baixa">Baixa</option>
       <option value="media">Média</option>
       <option value="alta">Alta</option>
     </select>
 
-    <button onclick="addTask()">Adicionar</button>
+    <!-- Categoria -->
+    <select id="category">
+      <option value="Pessoal">Pessoal</option>
+      <option value="Estudo">Estudo</option>
+      <option value="Trabalho">Trabalho</option>
+    </select>
+
+    <button onclick="addTask()">
+      Adicionar
+    </button>
   </div>
 
+  <!-- Filtros -->
   <div class="filters">
     <button onclick="loadTasks()">Todas</button>
     <button onclick="filterTasks(0)">Pendentes</button>
     <button onclick="filterTasks(1)">Concluídas</button>
   </div>
 
+  <!-- Busca -->
+  <div class="search-area">
+
+    <input
+      type="text"
+      id="searchInput"
+      placeholder="Buscar tarefa..."
+    >
+
+    <select id="filterCategory">
+      <option value="">Todas categorias</option>
+      <option value="Pessoal">Pessoal</option>
+      <option value="Estudo">Estudo</option>
+      <option value="Trabalho">Trabalho</option>
+    </select>
+
+    <button onclick="searchTasks()">
+      Buscar
+    </button>
+
+  </div>
+
+  <!-- Lista -->
   <ul id="taskList"></ul>
 </div>
 

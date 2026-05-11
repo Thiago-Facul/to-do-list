@@ -9,18 +9,20 @@ app.use(bodyParser.json());
 
 // Criar tarefa
 app.post("/tasks", (req, res) => {
-  const { title, priority } = req.body;
+  const { title, priority, category } = req.body;
 
   db.query(
-    "INSERT INTO tasks (title, done, priority) VALUES (?, ?, ?)",
-    [title, false, priority || "media"],
+    "INSERT INTO tasks (title, done, priority, category) VALUES (?, ?, ?, ?)",
+    [title, false, priority || "media", category || "Pessoal"],
     (err, result) => {
       if (err) return res.status(500).json(err);
+
       res.json({
         id: result.insertId,
         title,
         done: false,
-        priority
+        priority,
+        category
       });
     }
   );
@@ -28,15 +30,27 @@ app.post("/tasks", (req, res) => {
 
 // Listar tarefas (com filtro)
 app.get("/tasks", (req, res) => {
-  const { done } = req.query;
+  const { done, search, category } = req.query;
 
-  let query = "SELECT * FROM tasks";
+  let query = "SELECT * FROM tasks WHERE 1=1";
+  let values = [];
 
   if (done !== undefined) {
-    query += " WHERE done = ?";
+    query += " AND done = ?";
+    values.push(done);
   }
 
-  db.query(query, done !== undefined ? [done] : [], (err, results) => {
+  if (search) {
+    query += " AND title LIKE ?";
+    values.push(`%${search}%`);
+  }
+
+  if (category) {
+    query += " AND category = ?";
+    values.push(category);
+  }
+
+  db.query(query, values, (err, results) => {
     if (err) return res.status(500).json(err);
     res.json(results);
   });
@@ -52,6 +66,7 @@ app.put("/tasks/:id", (req, res) => {
     [done, id],
     (err) => {
       if (err) return res.status(500).json(err);
+
       res.json({ id, done });
     }
   );
@@ -61,10 +76,15 @@ app.put("/tasks/:id", (req, res) => {
 app.delete("/tasks/:id", (req, res) => {
   const { id } = req.params;
 
-  db.query("DELETE FROM tasks WHERE id = ?", [id], (err) => {
-    if (err) return res.status(500).json(err);
-    res.json({ id });
-  });
+  db.query(
+    "DELETE FROM tasks WHERE id = ?",
+    [id],
+    (err) => {
+      if (err) return res.status(500).json(err);
+
+      res.json({ id });
+    }
+  );
 });
 
 app.listen(3000, () => {

@@ -3,79 +3,143 @@ body {
   background: #f5f6fa;
   display: flex;
   justify-content: center;
-  margin-top: 50px;
+  padding: 40px 20px;
+  margin: 0;
 }
 
 .container {
   background: white;
-  padding: 25px;
-  border-radius: 10px;
-  width: 400px;
+  padding: 30px;
+  border-radius: 15px;
+
+  width: 100%;
+  max-width: 750px;
+
   box-shadow: 0 5px 15px rgba(0,0,0,0.1);
 }
 
 h1 {
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
+  font-size: 48px;
 }
 
-.input-group {
+/* Inputs */
+
+.input-group,
+.filters,
+.search-area {
   display: flex;
   gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 15px;
 }
 
-input {
-  flex: 1;
-  padding: 10px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-}
-
+input,
 select {
-  padding: 10px;
-  border-radius: 5px;
+  flex: 1;
+  min-width: 150px;
+
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+
+  font-size: 15px;
 }
 
 button {
-  padding: 10px;
+  padding: 12px 18px;
   border: none;
   background: #4CAF50;
   color: white;
-  border-radius: 5px;
+  border-radius: 8px;
   cursor: pointer;
+
+  font-size: 15px;
+  transition: 0.2s;
 }
 
 button:hover {
-  background: #45a049;
+  background: #43a047;
+  transform: scale(1.03);
 }
 
-.filters {
-  margin-top: 15px;
-  display: flex;
-  justify-content: space-between;
-}
+/* Lista */
 
 ul {
   list-style: none;
   padding: 0;
-  margin-top: 20px;
+  margin-top: 25px;
 }
 
 li {
   background: #f1f1f1;
-  padding: 10px;
-  margin-bottom: 10px;
-  border-radius: 5px;
+  padding: 15px;
+  margin-bottom: 12px;
+
+  border-radius: 10px;
+
   display: flex;
   justify-content: space-between;
   align-items: center;
+
+  gap: 15px;
+}
+
+li span {
+  font-size: 16px;
+  word-break: break-word;
+}
+
+li small {
+  color: #555;
+}
+
+li div {
+  display: flex;
+  gap: 8px;
 }
 
 li button {
-  margin-left: 5px;
+  min-width: 45px;
   background: #007bff;
 }
 
 li button:last-child {
   background: #e74c3c;
+}
+
+/* Responsividade */
+
+@media (max-width: 700px) {
+
+  .container {
+    padding: 20px;
+  }
+
+  h1 {
+    font-size: 36px;
+  }
+
+  .input-group,
+  .filters,
+  .search-area {
+    flex-direction: column;
+  }
+
+  input,
+  select,
+  button {
+    width: 100%;
+  }
+
+  li {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  li div {
+    width: 100%;
+    justify-content: flex-end;
+  }
 }
