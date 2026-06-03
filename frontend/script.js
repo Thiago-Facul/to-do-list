@@ -1,11 +1,31 @@
 const API = "http://localhost:3000/tasks";
 
-// Carregar todas tarefas
+// Carregar tarefas
 async function loadTasks() {
   const res = await fetch(API);
   const tasks = await res.json();
 
   render(tasks);
+  loadStats();
+}
+
+// Carregar estatísticas
+async function loadStats() {
+
+  const res =
+    await fetch("http://localhost:3000/stats");
+
+  const stats =
+    await res.json();
+
+  document.getElementById("totalTasks")
+    .innerText = `Total: ${stats.total || 0}`;
+
+  document.getElementById("pendingTasks")
+    .innerText = `Pendentes: ${stats.pendentes || 0}`;
+
+  document.getElementById("doneTasks")
+    .innerText = `Concluídas: ${stats.concluidas || 0}`;
 }
 
 // Filtrar concluídas/pendentes
@@ -18,8 +38,12 @@ async function filterTasks(done) {
 
 // Buscar tarefas
 async function searchTasks() {
-  const search = document.getElementById("searchInput").value;
-  const category = document.getElementById("filterCategory").value;
+
+  const search =
+    document.getElementById("searchInput").value;
+
+  const category =
+    document.getElementById("filterCategory").value;
 
   let url = API + "?";
 
@@ -39,12 +63,22 @@ async function searchTasks() {
 
 // Adicionar tarefa
 async function addTask() {
-  const title = document.getElementById("taskInput").value;
-  const priority = document.getElementById("priority").value;
-  const category = document.getElementById("category").value;
+
+  const title =
+    document.getElementById("taskInput").value;
+
+  const priority =
+    document.getElementById("priority").value;
+
+  const category =
+    document.getElementById("category").value;
+
+  const due_date =
+    document.getElementById("dueDate").value;
 
   await fetch(API, {
     method: "POST",
+
     headers: {
       "Content-Type": "application/json"
     },
@@ -52,17 +86,20 @@ async function addTask() {
     body: JSON.stringify({
       title,
       priority,
-      category
+      category,
+      due_date
     })
   });
 
   document.getElementById("taskInput").value = "";
+  document.getElementById("dueDate").value = "";
 
   loadTasks();
 }
 
 // Atualizar status
 async function toggleTask(id, done) {
+
   await fetch(`${API}/${id}`, {
     method: "PUT",
 
@@ -78,8 +115,9 @@ async function toggleTask(id, done) {
   loadTasks();
 }
 
-// Deletar tarefa
+// Excluir tarefa
 async function deleteTask(id) {
+
   await fetch(`${API}/${id}`, {
     method: "DELETE"
   });
@@ -89,30 +127,50 @@ async function deleteTask(id) {
 
 // Renderizar tarefas
 function render(tasks) {
-  const list = document.getElementById("taskList");
+
+  const list =
+    document.getElementById("taskList");
 
   list.innerHTML = "";
 
   tasks.forEach(task => {
-    const li = document.createElement("li");
+
+    const li =
+      document.createElement("li");
 
     li.innerHTML = `
       <span>
-        ${task.done ? "✅" : "⬜"} 
+
+        ${task.done ? "✅" : "⬜"}
+
         ${task.title}
 
+        <br>
+
         <small>
-          [${task.priority}] - ${task.category}
+          [${task.priority}]
+          -
+          ${task.category}
+          -
+          ${
+            task.due_date
+              ? new Date(task.due_date)
+                  .toLocaleDateString()
+              : "Sem prazo"
+          }
         </small>
+
       </span>
 
       <div>
 
-        <button onclick="toggleTask(${task.id}, ${task.done})">
+        <button
+          onclick="toggleTask(${task.id}, ${task.done})">
           ✔
         </button>
 
-        <button onclick="deleteTask(${task.id})">
+        <button
+          onclick="deleteTask(${task.id})">
           🗑
         </button>
 
@@ -121,6 +179,7 @@ function render(tasks) {
 
     list.appendChild(li);
   });
+
 }
 
 // Inicializar

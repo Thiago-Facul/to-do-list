@@ -15,13 +15,33 @@ body {
   width: 100%;
   max-width: 750px;
 
-  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
 h1 {
   text-align: center;
   margin-bottom: 30px;
   font-size: 48px;
+}
+
+/* Estatísticas */
+
+.stats {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.stats div {
+  flex: 1;
+
+  background: #f1f1f1;
+  padding: 15px;
+
+  border-radius: 10px;
+
+  text-align: center;
+  font-weight: bold;
 }
 
 /* Inputs */
@@ -50,8 +70,10 @@ select {
 button {
   padding: 12px 18px;
   border: none;
+
   background: #4CAF50;
   color: white;
+
   border-radius: 8px;
   cursor: pointer;
 
@@ -74,6 +96,7 @@ ul {
 
 li {
   background: #f1f1f1;
+
   padding: 15px;
   margin-bottom: 12px;
 
@@ -119,6 +142,10 @@ li button:last-child {
 
   h1 {
     font-size: 36px;
+  }
+
+  .stats {
+    flex-direction: column;
   }
 
   .input-group,

@@ -8,13 +8,32 @@
 <body>
 
 <div class="container">
+
   <h1>📝 To-Do List</h1>
 
-  <!-- Área de adicionar tarefa -->
+  <!-- Estatísticas -->
+  <div class="stats">
+
+    <div id="totalTasks">
+      Total: 0
+    </div>
+
+    <div id="pendingTasks">
+      Pendentes: 0
+    </div>
+
+    <div id="doneTasks">
+      Concluídas: 0
+    </div>
+
+  </div>
+
+  <!-- Adicionar tarefa -->
   <div class="input-group">
-    <input 
-      type="text" 
-      id="taskInput" 
+
+    <input
+      type="text"
+      id="taskInput"
       placeholder="Digite uma tarefa..."
     >
 
@@ -32,16 +51,33 @@
       <option value="Trabalho">Trabalho</option>
     </select>
 
+    <!-- Data de vencimento -->
+    <input
+      type="date"
+      id="dueDate"
+    >
+
     <button onclick="addTask()">
       Adicionar
     </button>
+
   </div>
 
   <!-- Filtros -->
   <div class="filters">
-    <button onclick="loadTasks()">Todas</button>
-    <button onclick="filterTasks(0)">Pendentes</button>
-    <button onclick="filterTasks(1)">Concluídas</button>
+
+    <button onclick="loadTasks()">
+      Todas
+    </button>
+
+    <button onclick="filterTasks(0)">
+      Pendentes
+    </button>
+
+    <button onclick="filterTasks(1)">
+      Concluídas
+    </button>
+
   </div>
 
   <!-- Busca -->
@@ -54,10 +90,21 @@
     >
 
     <select id="filterCategory">
-      <option value="">Todas categorias</option>
-      <option value="Pessoal">Pessoal</option>
-      <option value="Estudo">Estudo</option>
-      <option value="Trabalho">Trabalho</option>
+      <option value="">
+        Todas categorias
+      </option>
+
+      <option value="Pessoal">
+        Pessoal
+      </option>
+
+      <option value="Estudo">
+        Estudo
+      </option>
+
+      <option value="Trabalho">
+        Trabalho
+      </option>
     </select>
 
     <button onclick="searchTasks()">
@@ -68,6 +115,7 @@
 
   <!-- Lista -->
   <ul id="taskList"></ul>
+
 </div>
 
 <script src="script.js"></script>

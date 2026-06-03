@@ -4,31 +4,45 @@ const bodyParser = require("body-parser");
 const db = require("./database");
 
 const app = express();
+
 app.use(cors());
 app.use(bodyParser.json());
 
 // Criar tarefa
 app.post("/tasks", (req, res) => {
-  const { title, priority, category } = req.body;
+  const { title, priority, category, due_date } = req.body;
 
   db.query(
-    "INSERT INTO tasks (title, done, priority, category) VALUES (?, ?, ?, ?)",
-    [title, false, priority || "media", category || "Pessoal"],
+    `
+    INSERT INTO tasks
+    (title, done, priority, category, due_date)
+    VALUES (?, ?, ?, ?, ?)
+    `,
+    [
+      title,
+      false,
+      priority || "media",
+      category || "Pessoal",
+      due_date || null
+    ],
     (err, result) => {
-      if (err) return res.status(500).json(err);
+      if (err) {
+        return res.status(500).json(err);
+      }
 
       res.json({
         id: result.insertId,
         title,
         done: false,
         priority,
-        category
+        category,
+        due_date
       });
     }
   );
 });
 
-// Listar tarefas (com filtro)
+// Listar tarefas
 app.get("/tasks", (req, res) => {
   const { done, search, category } = req.query;
 
@@ -50,10 +64,38 @@ app.get("/tasks", (req, res) => {
     values.push(category);
   }
 
+  query += " ORDER BY created_at DESC";
+
   db.query(query, values, (err, results) => {
-    if (err) return res.status(500).json(err);
+    if (err) {
+      return res.status(500).json(err);
+    }
+
     res.json(results);
   });
+});
+
+// Estatísticas
+app.get("/stats", (req, res) => {
+
+  db.query(
+    `
+    SELECT
+      COUNT(*) AS total,
+      SUM(done = 1) AS concluidas,
+      SUM(done = 0) AS pendentes
+    FROM tasks
+    `,
+    (err, results) => {
+
+      if (err) {
+        return res.status(500).json(err);
+      }
+
+      res.json(results[0]);
+    }
+  );
+
 });
 
 // Atualizar status
@@ -65,14 +107,20 @@ app.put("/tasks/:id", (req, res) => {
     "UPDATE tasks SET done = ? WHERE id = ?",
     [done, id],
     (err) => {
-      if (err) return res.status(500).json(err);
 
-      res.json({ id, done });
+      if (err) {
+        return res.status(500).json(err);
+      }
+
+      res.json({
+        id,
+        done
+      });
     }
   );
 });
 
-// Deletar tarefa
+// Excluir tarefa
 app.delete("/tasks/:id", (req, res) => {
   const { id } = req.params;
 
@@ -80,7 +128,10 @@ app.delete("/tasks/:id", (req, res) => {
     "DELETE FROM tasks WHERE id = ?",
     [id],
     (err) => {
-      if (err) return res.status(500).json(err);
+
+      if (err) {
+        return res.status(500).json(err);
+      }
 
       res.json({ id });
     }
